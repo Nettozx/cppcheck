@@ -231,6 +231,9 @@ void CheckClass::constructors()
                 if (usage.assign || usage.init || var.isStatic())
                     continue;
 
+                if (!var.nameToken() || var.nameToken()->isAnonymous())
+                    continue;
+
                 if (var.valueType() && var.valueType()->pointer == 0 && var.type() && var.type()->needInitialization == Type::NeedInitialization::False && var.type()->derivedFrom.empty())
                     continue;
 
@@ -241,11 +244,19 @@ void CheckClass::constructors()
                 if (!var.isPointer() && !var.isPointerArray() && var.isClass() && func.type == FunctionType::eConstructor) {
                     // Unknown type so assume it is initialized
                     if (!var.type()) {
-                        if (var.isStlType() && var.valueType() && var.valueType()->containerTypeToken && var.getTypeName() == "std::array") {
-                            const Token* ctt = var.valueType()->containerTypeToken;
-                            if (!ctt->isStandardType() &&
-                                (!ctt->type() || ctt->type()->needInitialization != Type::NeedInitialization::True) &&
-                                !mSettings->library.podtype(ctt->str())) // TODO: handle complex type expression
+                        if (var.isStlType() && var.valueType() && var.valueType()->containerTypeToken) {
+                            if (var.valueType()->type == ValueType::Type::ITERATOR)
+                            {
+                                // needs initialization
+                            }
+                            else if (var.getTypeName() == "std::array") {
+                                const Token* ctt = var.valueType()->containerTypeToken;
+                                if (!ctt->isStandardType() &&
+                                    (!ctt->type() || ctt->type()->needInitialization != Type::NeedInitialization::True) &&
+                                    !mSettings->library.podtype(ctt->str())) // TODO: handle complex type expression
+                                    continue;
+                            }
+                            else
                                 continue;
                         }
                         else

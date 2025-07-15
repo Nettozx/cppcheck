@@ -448,14 +448,12 @@ namespace {
                 artifactLocation["uri"]              = picojson::value(location.getfile(false));
                 physicalLocation["artifactLocation"] = picojson::value(artifactLocation);
                 picojson::object region;
-                // Ensure line numbers are always positive (SARIF requires line numbers >= 1)
-                const int64_t lineNumber = (location.line > 0) ? location.line : 1;
-                region["startLine"]        = picojson::value(lineNumber);
-                region["endLine"]          = region["startLine"];
-                // Ensure column numbers are always positive (SARIF requires column numbers >= 1)
-                const int64_t columnNumber = (location.column > 0) ? location.column : 1;
-                region["startColumn"]      = picojson::value(columnNumber);
-                region["endColumn"]        = region["startColumn"];
+
+                region["startLine"] = picojson::value(static_cast<int64_t>(location.line < 1 ? 1 : location.line));
+                region["startColumn"] = picojson::value(static_cast<int64_t>(location.column < 1 ? 1 : location.column));
+                region["endLine"] = region["startLine"];
+                region["endColumn"] = region["startColumn"];
+
                 physicalLocation["region"] = picojson::value(region);
                 picojson::object loc;
                 loc["physicalLocation"] = picojson::value(physicalLocation);
