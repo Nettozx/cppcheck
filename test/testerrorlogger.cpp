@@ -506,7 +506,6 @@ private:
                       "17 Programming error"
                       "17 Programming error"
                       "0 "
-                      "17 Programming error"
                       "0 ", msg_str);
 
         ErrorMessage msg2;
@@ -549,11 +548,9 @@ private:
                                "1 0"
                                "0 "
                                "8 test.cpp"
-                               "1 0"
                                "17 Programming error"
                                "17 Programming error"
                                "0 "
-                               "17 Programming error"
                                "0 ";
             ErrorMessage msg;
             ASSERT_THROW_INTERNAL_EQUALS(msg.deserialize(str), INTERNAL, "Internal Error: Deserialization of error message failed - invalid CWE ID - not an integer");
@@ -564,13 +561,12 @@ private:
                                "5 error"
                                "1 0"
                                "7 invalid" // hash
+                               "1 0"
                                "0 "
                                "8 test.cpp"
-                               "1 0"
                                "17 Programming error"
                                "17 Programming error"
                                "0 "
-                               "17 Programming error"
                                "0 ";
             ErrorMessage msg;
             ASSERT_THROW_INTERNAL_EQUALS(msg.deserialize(str), INTERNAL, "Internal Error: Deserialization of error message failed - invalid hash - not an integer");
@@ -608,7 +604,6 @@ private:
                       "33 Illegal character in \"foo\\001bar\""
                       "33 Illegal character in \"foo\\001bar\""
                       "0 "
-                      "29 Illegal character in \"string\""
                       "0 ", msg_str);
 
         ErrorMessage msg2;
@@ -637,7 +632,6 @@ private:
                       "17 Programming error"
                       "17 Programming error"
                       "0 "
-                      "17 Programming error"
                       "1 "
                       "27 654\t33\t[]:;,()\t:/,;\tabcd:/,", msg_str);
 
